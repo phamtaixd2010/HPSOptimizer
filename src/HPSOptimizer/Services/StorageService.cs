@@ -216,15 +216,16 @@ public static class StorageService
         progress?.Report($"Đang {opName} ổ {driveLetter}: — việc này có thể mất vài phút…");
         Logger.Info($"Bắt đầu {opName} ổ {driveLetter}:");
 
-        var script = $"""
+        // $$""" → cần HAI dấu ngoặc nhọn mới mở interpolation, nên { } của PowerShell là ký tự thường.
+        var script = $$"""
             $ErrorActionPreference = 'Stop'
-            try {{
-                Optimize-Volume -DriveLetter {driveLetter} {op} -Verbose
+            try {
+                Optimize-Volume -DriveLetter {{driveLetter}} {{op}} -Verbose
                 exit 0
-            }} catch {{
+            } catch {
                 Write-Error $_.Exception.Message
                 exit 1
-            }}
+            }
             """;
 
         var res = await PowerShellRunner.RunAsync(script, ct).ConfigureAwait(false);
@@ -237,16 +238,16 @@ public static class StorageService
     public static async Task<string> ScanVolumeAsync(string driveLetter, CancellationToken ct = default)
     {
         Logger.Info($"Đang quét lỗi ổ {driveLetter}:");
-        var script = $"""
+        var script = $$"""
             $ErrorActionPreference = 'Stop'
-            try {{
-                $r = Repair-Volume -DriveLetter {driveLetter} -Scan
+            try {
+                $r = Repair-Volume -DriveLetter {{driveLetter}} -Scan
                 Write-Output "$r"
                 exit 0
-            }} catch {{
+            } catch {
                 Write-Error $_.Exception.Message
                 exit 1
-            }}
+            }
             """;
         var res = await PowerShellRunner.RunAsync(script, ct).ConfigureAwait(false);
         var output = res.Ok ? (res.StdOut.Length > 0 ? res.StdOut : "NoErrorsFound") : res.StdErr;
@@ -259,12 +260,12 @@ public static class StorageService
     public static async Task<bool> ShrinkOrExtendAsync(PartitionInfo p, long newSizeBytes, CancellationToken ct = default)
     {
         Guard(p);
-        var script = $"""
+        var script = $$"""
             $ErrorActionPreference = 'Stop'
-            try {{
-                Resize-Partition -DiskNumber {p.Disk} -PartitionNumber {p.Part} -Size {newSizeBytes}
+            try {
+                Resize-Partition -DiskNumber {{p.Disk}} -PartitionNumber {{p.Part}} -Size {{newSizeBytes}}
                 exit 0
-            }} catch {{ Write-Error $_.Exception.Message; exit 1 }}
+            } catch { Write-Error $_.Exception.Message; exit 1 }
             """;
         return await RunGuardedAsync(script, $"Đổi kích thước {p.Display} → {Fmt.Bytes(newSizeBytes)}", ct)
             .ConfigureAwait(false);
@@ -273,12 +274,12 @@ public static class StorageService
     public static async Task<bool> DeleteAsync(PartitionInfo p, CancellationToken ct = default)
     {
         Guard(p);
-        var script = $"""
+        var script = $$"""
             $ErrorActionPreference = 'Stop'
-            try {{
-                Remove-Partition -DiskNumber {p.Disk} -PartitionNumber {p.Part} -Confirm:$false
+            try {
+                Remove-Partition -DiskNumber {{p.Disk}} -PartitionNumber {{p.Part}} -Confirm:$false
                 exit 0
-            }} catch {{ Write-Error $_.Exception.Message; exit 1 }}
+            } catch { Write-Error $_.Exception.Message; exit 1 }
             """;
         return await RunGuardedAsync(script, $"XOÁ {p.Display}", ct).ConfigureAwait(false);
     }
@@ -290,12 +291,12 @@ public static class StorageService
             throw new InvalidOperationException("Phân vùng chưa có ký tự ổ, không format được.");
 
         var safeLabel = label.Replace("'", "''");
-        var script = $"""
+        var script = $$"""
             $ErrorActionPreference = 'Stop'
-            try {{
-                Format-Volume -DriveLetter {p.Letter} -FileSystem {fileSystem} -NewFileSystemLabel '{safeLabel}' -Force -Confirm:$false
+            try {
+                Format-Volume -DriveLetter {{p.Letter}} -FileSystem {{fileSystem}} -NewFileSystemLabel '{{safeLabel}}' -Force -Confirm:$false
                 exit 0
-            }} catch {{ Write-Error $_.Exception.Message; exit 1 }}
+            } catch { Write-Error $_.Exception.Message; exit 1 }
             """;
         return await RunGuardedAsync(script, $"FORMAT {p.Display} sang {fileSystem}", ct).ConfigureAwait(false);
     }
@@ -305,28 +306,28 @@ public static class StorageService
     {
         var safeLabel = label.Replace("'", "''");
         var sizeArg = useMax ? "-UseMaximumSize" : $"-Size {sizeBytes}";
-        var script = $"""
+        var script = $$"""
             $ErrorActionPreference = 'Stop'
-            try {{
-                $disk = Get-Disk -Number {diskNumber}
-                if ($disk.IsBoot -or $disk.IsSystem) {{ throw 'Từ chối thao tác trên ổ hệ thống.' }}
-                $p = New-Partition -DiskNumber {diskNumber} {sizeArg} -AssignDriveLetter
-                Format-Volume -Partition $p -FileSystem {fileSystem} -NewFileSystemLabel '{safeLabel}' -Force -Confirm:$false | Out-Null
+            try {
+                $disk = Get-Disk -Number {{diskNumber}}
+                if ($disk.IsBoot -or $disk.IsSystem) { throw 'Từ chối thao tác trên ổ hệ thống.' }
+                $p = New-Partition -DiskNumber {{diskNumber}} {{sizeArg}} -AssignDriveLetter
+                Format-Volume -Partition $p -FileSystem {{fileSystem}} -NewFileSystemLabel '{{safeLabel}}' -Force -Confirm:$false | Out-Null
                 Write-Output "Đã tạo phân vùng $($p.DriveLetter):"
                 exit 0
-            }} catch {{ Write-Error $_.Exception.Message; exit 1 }}
+            } catch { Write-Error $_.Exception.Message; exit 1 }
             """;
         return await RunGuardedAsync(script, $"TẠO phân vùng mới trên Disk {diskNumber}", ct).ConfigureAwait(false);
     }
 
     public static async Task<bool> AssignLetterAsync(PartitionInfo p, char letter, CancellationToken ct = default)
     {
-        var script = $"""
+        var script = $$"""
             $ErrorActionPreference = 'Stop'
-            try {{
-                Set-Partition -DiskNumber {p.Disk} -PartitionNumber {p.Part} -NewDriveLetter {letter}
+            try {
+                Set-Partition -DiskNumber {{p.Disk}} -PartitionNumber {{p.Part}} -NewDriveLetter {{letter}}
                 exit 0
-            }} catch {{ Write-Error $_.Exception.Message; exit 1 }}
+            } catch { Write-Error $_.Exception.Message; exit 1 }
             """;
         return await RunGuardedAsync(script, $"Gán ký tự {letter}: cho {p.Display}", ct).ConfigureAwait(false);
     }

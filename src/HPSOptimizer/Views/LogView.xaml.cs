@@ -23,7 +23,9 @@ public partial class LogView : UserControl
         Loaded += (_, _) => Reload();
     }
 
-    private void OnLogWritten(LogItem item) => Dispatcher.BeginInvoke(() =>
+    // InvokeAsync(Action) chứ không phải BeginInvoke — BeginInvoke chỉ nhận Delegate,
+    // truyền thẳng lambda vào là CS1660.
+    private void OnLogWritten(LogItem item) => Dispatcher.InvokeAsync(() =>
     {
         Logs.Insert(0, item);
         while (Logs.Count > 300) Logs.RemoveAt(Logs.Count - 1);
