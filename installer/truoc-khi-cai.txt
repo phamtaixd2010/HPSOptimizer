@@ -1,0 +1,30 @@
+﻿TRƯỚC KHI CÀI — ĐỌC 30 GIÂY
+
+HPS Optimizer chạy với quyền Administrator và có thể thay đổi Windows ở mức sâu.
+Ba điều cần biết:
+
+1. AN TOÀN LÀ MẶC ĐỊNH
+   Nút "Tối ưu nhanh" ở tab Tổng quan chỉ chạm vào những thay đổi đảo ngược được:
+   dọn thư mục tạm, tắt hiệu ứng trực quan, tắt Game DVR, bỏ độ trễ menu.
+   Nó KHÔNG đụng vào Windows Update, Defender, driver hay phân vùng ổ đĩa.
+
+2. MỌI THAY ĐỔI ĐỀU HOÀN TÁC ĐƯỢC — TRỪ VIỆC XOÁ FILE
+   Trước mỗi thay đổi, app tạo điểm khôi phục hệ thống và lưu giá trị cũ.
+   Vào tab "Nhật ký" là hoàn tác lại được từng mục hoặc tất cả.
+
+   Ngoại lệ: file đã xoá, thùng rác đã dọn, phân vùng đã format — không lấy lại được.
+
+3. TAB "BẢO TRÌ & PHÂN VÙNG" LÀ KHU VỰC NGUY HIỂM
+   Xoá và format phân vùng làm mất dữ liệu vĩnh viễn.
+   App khoá cứng phân vùng boot / system / recovery / EFI và bắt bạn gõ tay
+   chuỗi xác nhận trước mỗi thao tác huỷ dữ liệu. Dù vậy: hãy sao lưu trước.
+
+YÊU CẦU HỆ THỐNG
+   - Windows 10 phiên bản 2004 (build 19041) trở lên, hoặc Windows 11
+   - Kiến trúc x64
+   - Quyền Administrator
+
+Sau khi cài, dữ liệu nhật ký và hoàn tác nằm ở:
+   C:\ProgramData\HPSOptimizer\
+
+Thư mục đó được giữ lại khi gỡ cài đặt, để bạn vẫn hoàn tác được các thay đổi cũ.

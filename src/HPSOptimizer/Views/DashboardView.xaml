@@ -1,0 +1,62 @@
+﻿<UserControl x:Class="HPSOptimizer.Views.DashboardView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="4,10,10,10">
+        <StackPanel>
+
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <TextBlock Text="Cấu hình máy" Style="{StaticResource H1}" />
+                    <ItemsControl x:Name="SpecList" Margin="0,6,0,0">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Margin="0,3">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="190" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Text="{Binding Key}" Foreground="#FF6B7A90" />
+                                    <TextBlock Grid.Column="1" Text="{Binding Value}" TextWrapping="Wrap" />
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </Border>
+
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <TextBlock Text="Tối ưu nhanh (chỉ những thay đổi an toàn)" Style="{StaticResource H1}" />
+                    <TextBlock Style="{StaticResource Subtle}" Margin="0,0,0,10">
+                        Trình tự: tạo điểm khôi phục hệ thống → dọn thư mục tạm, bộ đệm Windows Update và Delivery
+                        Optimization → tắt hiệu ứng trực quan, trong suốt, độ trễ menu, Game DVR và độ trễ khởi động.
+                        Không đụng vào dịch vụ, không sửa phân vùng, không xoá thùng rác.
+                        Mọi thay đổi đều nằm trong tab Nhật ký và hoàn tác được từng mục.
+                    </TextBlock>
+
+                    <StackPanel Orientation="Horizontal">
+                        <Button x:Name="RunBtn" Content="Chạy tối ưu nhanh" Click="Run_Click" />
+                        <Button x:Name="RestoreBtn" Content="Mở System Restore" Style="{StaticResource GhostButton}"
+                                Click="OpenRestore_Click" />
+                    </StackPanel>
+
+                    <ProgressBar x:Name="Progress" Margin="0,12,0,6" Visibility="Collapsed" IsIndeterminate="True" />
+                    <TextBlock x:Name="ProgressText" Style="{StaticResource Subtle}" />
+                </StackPanel>
+            </Border>
+
+            <Border Style="{StaticResource Card}" Background="#FFFFF7E8" BorderBrush="{StaticResource Orange}">
+                <StackPanel>
+                    <TextBlock Text="Đọc trước khi dùng" FontWeight="SemiBold" Foreground="#FF7A5200" />
+                    <TextBlock Style="{StaticResource Subtle}" Foreground="#FF7A5200" Margin="0,6,0,0">
+                        • Điểm khôi phục chỉ tạo được khi System Protection đang bật cho ổ C:.<LineBreak />
+                        • Một số tinh chỉnh chỉ có hiệu lực sau khi đăng xuất hoặc khởi động lại.<LineBreak />
+                        • Tab &quot;Bảo trì &amp; Phân vùng&quot; có thao tác xoá dữ liệu vĩnh viễn. Phân vùng boot,
+                          system, recovery và EFI bị khoá cứng, app sẽ từ chối thao tác lên chúng.
+                    </TextBlock>
+                </StackPanel>
+            </Border>
+
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

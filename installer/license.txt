@@ -1,0 +1,38 @@
+﻿ĐIỀU KHOẢN SỬ DỤNG — HPS OPTIMIZER
+Bản quyền © HP Steel. Phần mềm nội bộ.
+
+1. PHẠM VI
+   HPS Optimizer là công cụ nội bộ của HP Steel, dùng để tối ưu hệ thống Windows 11
+   và quản lý ổ đĩa trên máy tính do HP Steel quản lý hoặc được HP Steel cho phép.
+
+2. QUYỀN QUẢN TRỊ
+   Phần mềm chạy với quyền Administrator. Nó có khả năng:
+     - Sửa Windows Registry (HKEY_CURRENT_USER và HKEY_LOCAL_MACHINE)
+     - Đổi chế độ khởi động và dừng các dịch vụ Windows
+     - Xoá file trong thư mục tạm, bộ nhớ đệm và Thùng rác
+     - Tạo, thu nhỏ, mở rộng, format và XOÁ phân vùng ổ đĩa
+
+3. RỦI RO MẤT DỮ LIỆU
+   Các thao tác xoá phân vùng, format và dọn Thùng rác là VĨNH VIỄN,
+   KHÔNG THỂ HOÀN TÁC bằng phần mềm này hay bất kỳ điểm khôi phục nào.
+
+   Phần mềm chặn mọi thao tác lên phân vùng boot, system, recovery và EFI,
+   nhưng cơ chế đó không thay thế được việc sao lưu.
+
+   HÃY SAO LƯU DỮ LIỆU TRƯỚC KHI DÙNG PHẦN CHỨC NĂNG PHÂN VÙNG.
+
+4. CƠ CHẾ AN TOÀN
+   Trước mỗi thay đổi hệ thống, phần mềm tạo một điểm khôi phục (System Restore Point)
+   và ghi giá trị cũ vào nhật ký hoàn tác tại:
+       C:\ProgramData\HPSOptimizer\undo.json
+
+   Thư mục này KHÔNG bị xoá khi gỡ cài đặt, để bạn luôn hoàn tác được.
+
+5. KHÔNG BẢO HÀNH
+   Phần mềm được cung cấp "nguyên trạng", không kèm bảo đảm dưới bất kỳ hình thức nào.
+   HP Steel không chịu trách nhiệm cho mất mát dữ liệu, hỏng hệ điều hành, hay bất kỳ
+   thiệt hại nào phát sinh từ việc sử dụng phần mềm.
+
+   Người dùng tự chịu trách nhiệm với mọi thao tác mình thực hiện.
+
+Cài đặt và sử dụng phần mềm đồng nghĩa với việc bạn chấp nhận toàn bộ các điều khoản trên.

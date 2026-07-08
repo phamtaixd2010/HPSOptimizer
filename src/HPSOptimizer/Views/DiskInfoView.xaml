@@ -1,0 +1,118 @@
+﻿<UserControl x:Class="HPSOptimizer.Views.DiskInfoView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <DockPanel Margin="4,10,10,10">
+
+        <StackPanel DockPanel.Dock="Top">
+            <TextBlock Text="Ổ đĩa &amp; sức khoẻ S.M.A.R.T." Style="{StaticResource H1}" />
+            <TextBlock Style="{StaticResource Subtle}" Margin="0,0,0,10">
+                Chỉ đọc, không ghi gì lên ổ. Dữ liệu lấy từ Storage Management của Windows và cảm biến độ tin cậy của ổ.
+                Ổ USB rẻ tiền thường không báo cáo nhiệt độ hay số giờ chạy.
+            </TextBlock>
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                <Button x:Name="RefreshBtn" Content="Quét lại ổ đĩa" Click="Refresh_Click" />
+                <ProgressBar x:Name="Progress" Width="180" IsIndeterminate="True" Visibility="Collapsed" VerticalAlignment="Center" />
+            </StackPanel>
+        </StackPanel>
+
+        <TextBlock DockPanel.Dock="Bottom" x:Name="StatusLine" Style="{StaticResource Subtle}" Margin="0,8,0,0" />
+
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <ItemsControl x:Name="DiskList">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border Style="{StaticResource Card}">
+                            <StackPanel>
+                                <Grid>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="{Binding Name}" FontSize="15" FontWeight="SemiBold"
+                                                   Foreground="{StaticResource Navy}" />
+                                        <Border Background="{StaticResource Orange}" CornerRadius="3" Padding="6,2" Margin="10,0,0,0"
+                                                VerticalAlignment="Center">
+                                            <TextBlock Text="{Binding BadgeText}" FontSize="10" FontWeight="Bold"
+                                                       Foreground="{StaticResource Navy}" />
+                                            <Border.Style>
+                                                <Style TargetType="Border">
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding BadgeText}" Value="">
+                                                            <Setter Property="Visibility" Value="Collapsed" />
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Border.Style>
+                                        </Border>
+                                    </StackPanel>
+                                    <TextBlock Text="{Binding Verdict}" HorizontalAlignment="Right" FontWeight="SemiBold">
+                                        <TextBlock.Style>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="Foreground" Value="{StaticResource Success}" />
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding PredictFailure}" Value="True">
+                                                        <Setter Property="Foreground" Value="{StaticResource Danger}" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </TextBlock>
+                                </Grid>
+
+                                <UniformGrid Columns="4" Margin="0,10,0,0">
+                                    <StackPanel Margin="0,0,10,8">
+                                        <TextBlock Text="Loại" Style="{StaticResource Subtle}" />
+                                        <TextBlock Text="{Binding MediaType}" />
+                                    </StackPanel>
+                                    <StackPanel Margin="0,0,10,8">
+                                        <TextBlock Text="Giao tiếp" Style="{StaticResource Subtle}" />
+                                        <TextBlock Text="{Binding BusType}" />
+                                    </StackPanel>
+                                    <StackPanel Margin="0,0,10,8">
+                                        <TextBlock Text="Dung lượng" Style="{StaticResource Subtle}" />
+                                        <TextBlock Text="{Binding SizeText}" />
+                                    </StackPanel>
+                                    <StackPanel Margin="0,0,10,8">
+                                        <TextBlock Text="Kiểu phân vùng" Style="{StaticResource Subtle}" />
+                                        <TextBlock Text="{Binding PartitionStyle}" />
+                                    </StackPanel>
+
+                                    <StackPanel Margin="0,0,10,8">
+                                        <TextBlock Text="Nhiệt độ" Style="{StaticResource Subtle}" />
+                                        <TextBlock Text="{Binding TempText}" />
+                                    </StackPanel>
+                                    <StackPanel Margin="0,0,10,8">
+                                        <TextBlock Text="Số giờ đã chạy" Style="{StaticResource Subtle}" />
+                                        <TextBlock Text="{Binding HoursText}" />
+                                    </StackPanel>
+                                    <StackPanel Margin="0,0,10,8">
+                                        <TextBlock Text="Hao mòn (SSD)" Style="{StaticResource Subtle}" />
+                                        <TextBlock Text="{Binding WearText}" />
+                                    </StackPanel>
+                                    <StackPanel Margin="0,0,10,8">
+                                        <TextBlock Text="Lỗi tích luỹ" Style="{StaticResource Subtle}" />
+                                        <TextBlock Text="{Binding ErrorsText}" />
+                                    </StackPanel>
+
+                                    <StackPanel Margin="0,0,10,0">
+                                        <TextBlock Text="Serial" Style="{StaticResource Subtle}" />
+                                        <TextBlock Text="{Binding Serial}" TextTrimming="CharacterEllipsis" />
+                                    </StackPanel>
+                                    <StackPanel Margin="0,0,10,0">
+                                        <TextBlock Text="Firmware" Style="{StaticResource Subtle}" />
+                                        <TextBlock Text="{Binding Firmware}" />
+                                    </StackPanel>
+                                    <StackPanel Margin="0,0,10,0">
+                                        <TextBlock Text="Trạng thái vận hành" Style="{StaticResource Subtle}" />
+                                        <TextBlock Text="{Binding OperationalStatus}" />
+                                    </StackPanel>
+                                    <StackPanel Margin="0,0,10,0">
+                                        <TextBlock Text="Số hiệu ổ" Style="{StaticResource Subtle}" />
+                                        <TextBlock Text="{Binding Number, StringFormat={}Disk {0}}" />
+                                    </StackPanel>
+                                </UniformGrid>
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+    </DockPanel>
+</UserControl>
