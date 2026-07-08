@@ -1,0 +1,75 @@
+name: Build HPS Optimizer
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Lay source
+        uses: actions/checkout@v4
+
+      - name: Cai .NET 8 SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Kiem tra UTF-8 BOM
+        shell: pwsh
+        run: |
+          $bad = @()
+          Get-ChildItem -Recurse -Include *.xaml,*.cs,*.csproj,*.iss,*.ps1,*.manifest |
+            Where-Object { $_.FullName -notmatch '\\(bin|obj)\\' } |
+            ForEach-Object {
+                $b = [System.IO.File]::ReadAllBytes($_.FullName)
+                if ($b.Length -lt 3 -or $b[0] -ne 0xEF -or $b[1] -ne 0xBB -or $b[2] -ne 0xBF) {
+                    $bad += $_.FullName
+                }
+            }
+          if ($bad.Count -gt 0) {
+              Write-Host "::error::$($bad.Count) file thieu UTF-8 BOM:"
+              $bad | ForEach-Object { Write-Host "  $_" }
+              exit 1
+          }
+          Write-Host "Tat ca file text deu co BOM."
+
+      - name: Build
+        shell: pwsh
+        run: |
+          dotnet build src\HPSOptimizer\HPSOptimizer.csproj -c Release 2>&1 | Tee-Object -FilePath build-log.txt
+          exit $LASTEXITCODE
+
+      - name: Luu log build
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-log
+          path: build-log.txt
+          retention-days: 14
+
+      - name: Cai Inno Setup
+        run: choco install innosetup --no-progress -y
+
+      - name: Publish va dong goi
+        shell: pwsh
+        run: .\build.ps1 -Installer
+
+      - name: Tai len Setup.exe
+        uses: actions/upload-artifact@v4
+        with:
+          name: HPSOptimizer-Setup
+          path: dist/HPSOptimizer-*-Setup.exe
+          retention-days: 30
+          if-no-files-found: error
+
+      - name: Tai len exe roi
+        uses: actions/upload-artifact@v4
+        with:
+          name: HPSOptimizer-exe
+          path: publish/HPSOptimizer.exe
+          retention-days: 30
+          if-no-files-found: error
