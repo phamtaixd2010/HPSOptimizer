@@ -1,4 +1,5 @@
-﻿using System.Management;
+﻿using System.IO;
+using System.Management;
 using System.Windows;
 using System.Windows.Controls;
 using HPSOptimizer.Core;

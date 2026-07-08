@@ -1,4 +1,5 @@
-﻿namespace HPSOptimizer.Core;
+﻿using System.IO;
+namespace HPSOptimizer.Core;
 
 /// <summary>Đường dẫn dữ liệu của app (nằm ở %ProgramData%\HPSOptimizer).</summary>
 public static class Paths

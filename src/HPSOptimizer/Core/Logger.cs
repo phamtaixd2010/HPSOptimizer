@@ -1,4 +1,5 @@
-﻿namespace HPSOptimizer.Core;
+﻿using System.IO;
+namespace HPSOptimizer.Core;
 
 public enum LogLevel { Info, Success, Warn, Error }
 

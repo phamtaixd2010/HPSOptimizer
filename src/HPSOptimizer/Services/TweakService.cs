@@ -1,4 +1,5 @@
-﻿using Microsoft.Win32;
+﻿using System.IO;
+using Microsoft.Win32;
 using HPSOptimizer.Core;
 
 namespace HPSOptimizer.Services;
